@@ -254,7 +254,7 @@ TEACHERS.forEach(function(t) {
     frontLight:'Warm white centre spot',
     backLEDs:'Warm amber',
     sideLight:'Soft warm',
-    smoke:false, blackout:false,
+    smoke:'no', smokeTransition:'', blackout:false,
     cue:'onstage', entrySide:'right', bow:true,
     lightCues:'', special:''
   };
@@ -265,6 +265,11 @@ function saveField(tid, field, value) {
 }
 function saveBool(tid, field, val) {
   if(FORM_STATE[tid]) FORM_STATE[tid][field] = (val === 'true' || val === true);
+}
+function handleSmokeChange(tid, val) {
+  saveField(tid, 'smoke', val);
+  var el = document.getElementById('smoke-transition-' + tid);
+  if(el) el.style.display = (val === 'transition') ? 'block' : 'none';
 }
 function handlePhotoUpload(tid, input) {
   var file = input.files[0];
@@ -284,6 +289,9 @@ function generateCode(tid) {
   if(s.frontLight) lights.push('Front: ' + s.frontLight);
   if(s.backLEDs)   lights.push('Back LEDs: ' + s.backLEDs);
   if(s.sideLight && s.sideLight !== 'Off') lights.push('Side: ' + s.sideLight);
+  var smokeDesc = 'No';
+  if(s.smoke === 'start') smokeDesc = 'Yes \u2014 at the start of performance';
+  else if(s.smoke === 'transition') smokeDesc = 'Yes \u2014 at a transition' + (s.smokeTransition ? ': ' + s.smokeTransition : '');
   var data = {
     teacherId: tid,
     teacherName: t.name,
@@ -295,20 +303,37 @@ function generateCode(tid) {
     lights: lights.join('\n'),
     lightCues: s.lightCues,
     smoke: s.smoke,
+    smokeTransition: s.smokeTransition || '',
     blackout: s.blackout,
     cue: s.cue,
     entrySide: s.entrySide,
     bow: s.bow,
     special: s.special
   };
+  var entryDesc = (s.cue === 'onstage' ? 'Already on stage' : 'Enter from wing');
+  var sideDesc  = s.entrySide === 'right' ? 'Stage Right' : s.entrySide === 'left' ? 'Stage Left' : 'Centre';
+  var summaryLines = [
+    '\uD83C\uDFAD Act ' + t.act + ' \u2014 ' + t.name,
+    '\uD83C\uDFB5 Song: ' + (s.song || '\u2014') + (s.style ? ' (' + s.style + ')' : '') + (s.duration ? ' \u00b7 ' + s.duration : ''),
+    s.costumeColor ? '\uD83D\uDC57 Costume colour: ' + s.costumeColor : null,
+    '\uD83D\uDCA1 Lights: ' + (lights.length ? lights.join(', ') : '\u2014'),
+    s.lightCues ? '\u23F1 Light cues: ' + s.lightCues : null,
+    '\uD83D\uDCA8 Smoke: ' + smokeDesc,
+    '\u2B1B Blackout at end: ' + (s.blackout ? 'Yes' : 'No'),
+    '\uD83D\uDEB6 Entry: ' + entryDesc + ' \u00b7 ' + sideDesc,
+    '\uD83D\uDE47 Bow at end: ' + (s.bow ? 'Yes' : 'No'),
+    s.special ? '\uD83D\uDCDD Special requirements: ' + s.special : null
+  ].filter(Boolean).join('\n');
   var json = JSON.stringify(data);
   var code;
   try { code = btoa(unescape(encodeURIComponent(json))); }
   catch(e) { code = btoa(json); }
-  var out = document.getElementById('code-out-' + tid);
-  var ta  = document.getElementById('code-ta-'  + tid);
-  if(out) out.style.display = 'block';
-  if(ta)  ta.value = code;
+  var out   = document.getElementById('code-out-' + tid);
+  var ta    = document.getElementById('code-ta-'  + tid);
+  var sumEl = document.getElementById('code-summary-' + tid);
+  if(out)   out.style.display = 'block';
+  if(ta)    ta.value = code;
+  if(sumEl) sumEl.textContent = summaryLines;
 }
 function copyCode(tid) {
   var ta = document.getElementById('code-ta-' + tid);
@@ -613,9 +638,14 @@ function renderInfo(t) {
     + '<div style="font-size:12px;color:#999;margin-top:5px">Optional \u2014 only note moments where the light must change during your piece</div>'
     + '</div>'
     + '<div class="form-field"><label class="form-label">Smoke machine</label><div class="radio-group">'
-    + mkRadio('smoke',   'yes', 'Yes \u2014 use smoke machine', 'smoke',    true)
-    + mkRadio('smoke',   'no',  'No',                           'smoke',    true)
-    + '</div></div>'
+    + '<label class="radio-lbl"><input type="radio" name="smoke-' + tid + '" value="no"' + (s.smoke === 'no' || s.smoke === false ? ' checked' : '') + ' onchange="handleSmokeChange(\'' + tid + '\',\'no\')"> No smoke</label>'
+    + '<label class="radio-lbl"><input type="radio" name="smoke-' + tid + '" value="start"' + (s.smoke === 'start' ? ' checked' : '') + ' onchange="handleSmokeChange(\'' + tid + '\',\'start\')"> Yes \u2014 at the start of my performance</label>'
+    + '<label class="radio-lbl"><input type="radio" name="smoke-' + tid + '" value="transition"' + (s.smoke === 'transition' ? ' checked' : '') + ' onchange="handleSmokeChange(\'' + tid + '\',\'transition\')"> Yes \u2014 at a specific transition moment</label>'
+    + '</div>'
+    + '<div id="smoke-transition-' + tid + '" style="' + (s.smoke === 'transition' ? '' : 'display:none;') + 'margin-top:8px">'
+    + '<input type="text" class="form-input" style="width:100%;padding:8px 12px;border:1px solid #d4c5b5;border-radius:6px;font-size:14px" placeholder="Describe the moment \u2014 e.g. \u201cbetween the two songs\u201d or \u201cafter the first 30 seconds\u201d" value="' + (s.smokeTransition||'') + '" oninput="saveField(\'' + tid + '\',\'smokeTransition\',this.value)">'
+    + '</div>'
+    + '</div>'
     + '<div class="form-field"><label class="form-label">Blackout at end of your act</label><div class="radio-group">'
     + mkRadio('blackout','yes', 'Yes \u2014 blackout after my act', 'blackout', true)
     + mkRadio('blackout','no',  'No \u2014 keep lights on',         'blackout', true)
@@ -646,9 +676,11 @@ function renderInfo(t) {
     // GENERATE CODE
     + '<button class="generate-btn" onclick="generateCode(\'' + tid + '\')">\u2709 Generate Summary for Swapnil</button>'
     + '<div id="code-out-' + tid + '" class="code-output" style="display:none">'
-    + '<div class="code-output-title">\uD83D\uDCCB Your summary code \u2014 copy and send to Swapnil</div>'
+    + '<div class="code-output-title">\uD83D\uDCCB Check your submission below \u2014 make sure everything looks right before sending</div>'
+    + '<pre id="code-summary-' + tid + '" style="background:#f8f4ef;border-radius:8px;padding:14px 16px;font-size:13px;line-height:1.8;white-space:pre-wrap;margin:0 0 18px 0;color:#3a2a1a;border:1px solid #e8ddd4;font-family:inherit"></pre>'
+    + '<div class="code-output-title" style="margin-top:0">\uD83D\uDD10 Your code \u2014 copy and send this to Swapnil</div>'
     + '<textarea id="code-ta-' + tid + '" class="code-textarea" readonly placeholder="Code will appear here\u2026"></textarea>'
-    + '<br><button class="copy-btn" onclick="copyCode(\'' + tid + '\')">Copy to clipboard</button>'
+    + '<br><button class="copy-btn" onclick="copyCode(\'' + tid + '\')">Copy code to clipboard</button>'
     + '<span id="copy-conf-' + tid + '" style="font-size:12px;color:#4A7C59;margin-left:10px;opacity:0;transition:opacity .3s;font-weight:600">\u2713 Copied!</span>'
     + '</div>'
 
