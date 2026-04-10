@@ -689,13 +689,22 @@ function renderInfo(t) {
     + mkRadio('bow', 'yes', 'Yes \u2014 I will take a bow',   'bow', true)
     + mkRadio('bow', 'no',  'No \u2014 I will exit directly', 'bow', true)
     + '</div></div>'
+    + '<div class="form-field"><label class="form-label">Exit cue \u2014 how should the lights signal your act is over?</label>'
+    + '<div style="font-size:12px;color:#999;margin-bottom:10px">Think about this in advance \u2014 it helps the light tech know exactly when to move on</div>'
+    + '<select id="exitCue-' + tid + '" style="width:100%;padding:9px 11px;background:#F7F3EE;border:1px solid #D5CCC2;border-radius:7px;font-size:13px;color:#1A1A1A;font-family:inherit;cursor:pointer" onchange="saveField(\'' + tid + '\',\'exitCue\',this.value)">'
+    + '<option value="">-- Select an exit cue --</option>'
+    + '<option value="Exit is part of the music">Exit is part of the music (choreographed)</option>'
+    + '<option value="Exit after last pose in blackout">Exit after last pose \u2014 blackout</option>'
+    + '<option value="Exit after last pose in fade">Exit after last pose \u2014 fade out</option>'
+    + '<option value="Exit after last pose in blue light">Exit after last pose \u2014 blue hold</option>'
+    + '</select></div>'
     + '<div class="form-field"><label class="form-label">Special requirements</label>'
     + '<textarea class="form-textarea" placeholder="Props, live musician, specific lighting moment, anything else\u2026" oninput="saveField(\'' + tid + '\',\'special\',this.value)">' + s.special + '</textarea>'
     + '</div>'
     + '</div>'
 
     // GENERATE CODE
-    + '<div class="field-group" style="margin-bottom:14px"><label class="field-label">Exit Cue</label><select id="exitCue-' + tid + '" style="width:100%;padding:9px 11px;background:#F7F3EE;border:1px solid #D5CCC2;border-radius:7px;font-size:13px;color:#1A1A1A;font-family:inherit;cursor:pointer"><option value="">-- Select --</option><option value="Exit is part of the music">Exit is part of the music (choreographed)</option><option value="Exit after last pose in blackout">Exit after last pose — blackout</option><option value="Exit after last pose in fade">Exit after last pose — fade</option><option value="Exit after last pose in blue light">Exit after last pose — blue light</option><option value="TBD">TBD — confirm at rehearsal</option></select></div>' + '<button class="generate-btn" onclick="generateCode(\'' + tid + '\')">\u2709 Generate Summary for Swapnil</button>'
+    + '<button class="generate-btn" onclick="generateCode(\'' + tid + '\')">\u2709 Generate Summary for Swapnil</button>'
     + '<div id="code-out-' + tid + '" class="code-output" style="display:none">'
     + '<div class="code-output-title">\uD83D\uDCCB Check your submission below \u2014 make sure everything looks right before sending</div>'
     + '<pre id="code-summary-' + tid + '" style="background:#f8f4ef;border-radius:8px;padding:14px 16px;font-size:13px;line-height:1.8;white-space:pre-wrap;margin:0 0 18px 0;color:#3a2a1a;border:1px solid #e8ddd4;font-family:inherit"></pre>'
