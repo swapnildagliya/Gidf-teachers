@@ -141,7 +141,7 @@ tbody tr:last-child td{border-bottom:none}
   .hdr-badge, .badge, .no-print { display:none !important; }
   .nav { display:none !important; }
   .teacher-nav { display:none !important; }
-  .print-btn { display:none !important; }
+  #hdr-print-btn { display:none !important; }
   .content { padding:10px 0 !important; max-width:100% !important; }
   .table-wrap { border:1px solid #ccc !important; border-radius:0 !important; }
   table { font-size:11px !important; }
@@ -163,7 +163,10 @@ tbody tr:last-child td{border-bottom:none}
     <div class="hdr-title">GIDF 2026 — Teacher Pack</div>
     <div class="hdr-sub">Saturday 2 May 2026 &nbsp;·&nbsp; Gala Showcase 20:30 &nbsp;·&nbsp; Shoonya Dance Centre, Ghent &nbsp;·&nbsp; Curated by Swapnil Dagliya / ABC</div>
   </div>
-  <div class="badge">Teachers</div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="badge">Teachers</div>
+    <button id="hdr-print-btn" onclick="window.print()" style="background:#C4581A;color:#fff;border:none;border-radius:7px;padding:7px 15px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🖨 Print</button>
+  </div>
 </div>
 
 <div class="teacher-nav" id="teacherNav"></div>
