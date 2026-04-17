@@ -370,34 +370,55 @@ function render(){
 }
 
 function renderSchedule(t) {
-  const rows = [
-    { time:"08:30 \u2013 08:45", label:"Arrival & Registration",                                    mine:false, brk:false },
-    { time:"08:45 \u2013 09:00", label:"Rise & Riyaaz with Swapnil",                                mine:false, brk:false },
-    ...(t.workshop ? [{ time:t.workshop.time, label:`Your workshop: ${t.workshop.title}`,            mine:true,  brk:false }] : []),
-    { time:"12:30 \u2013 13:30", label:"Lunch Break",                                               mine:false, brk:true  },
-    { time:"15:00 \u2013 15:20", label:"Spill the Chai \u2014 community break",                     mine:false, brk:true  },
-    { time:"16:00",              label:"Tech crew setup begins (crew only)",                         mine:false, brk:false },
-    { time:t.slot,               label:`Your stage rehearsal \u2014 Act ${t.act}`,                  mine:true,  brk:false },
-    { time:"20:00",              label:"Doors open \u2014 audience entry",                           mine:false, brk:false },
-    { time:"20:15",              label:"All performers at stations",                                 mine:false, brk:false },
-    { time:"20:30",              label:"\u25b6 GIDF 2026 Gala Showcase BEGINS",                     mine:false, brk:false, show:true },
-    { time:"~21:30",             label:"Show ends",                                                  mine:false, brk:true  },
+  const TNAMES = { swapnil:"Swapnil", colleena:"Colleena", vaishali:"Vaishali", shampa:"Shampa", desihop:"Desihop", manasi:"Manasi" };
+
+  // Friday 1 May — workshops & community class
+  const friRows = [
+    { time:"12:00 \u2013 16:00", label:"Technique & Tools Lab",      teacher:"colleena", otherT:true },
+    { time:"17:00 \u2013 18:30", label:"Bollywood Folk Fusion",       teacher:"vaishali", otherT:true },
+    { time:"18:30 \u2013 20:00", label:"Garba Choreography",          teacher:"shampa",   otherT:true },
+    { time:"20:15 \u2013 21:00", label:"Community Class: Kalbeliya",  teacher:"swapnil",  otherT:true },
+    { time:"21:00",              label:"Opening Party",                brk:true },
   ];
+
+  // Saturday 2 May — full day in chronological order
+  const satRows = [
+    { time:"08:30 \u2013 08:45", label:"Arrival & Registration" },
+    { time:"08:45 \u2013 09:00", label:"Rise & Riyaaz with Swapnil",                                                  teacher:"swapnil" },
+    { time:"09:00 \u2013 11:00", label:t.id==="desihop" ?"Your workshop: Kuthu: The Heartbeat of the Streets"        :"Kuthu: The Heartbeat of the Streets",         mine:t.id==="desihop",  otherT:t.id!=="desihop",  teacher:"desihop"  },
+    { time:"11:00 \u2013 12:30", label:t.id==="shampa"  ?"Your workshop: The Martial Grace of Mayurbhanj Chhau"      :"The Martial Grace of Mayurbhanj Chhau",        mine:t.id==="shampa",   otherT:t.id!=="shampa",   teacher:"shampa"   },
+    { time:"12:30 \u2013 13:30", label:"Lunch Break",                                                                 brk:true },
+    { time:"13:30 \u2013 15:00", label:t.id==="manasi"  ?"Your workshop: Giddha: The Pulse of Punjab"                :"Giddha: The Pulse of Punjab",                  mine:t.id==="manasi",   otherT:t.id!=="manasi",   teacher:"manasi"   },
+    { time:"15:00 \u2013 15:20", label:"Spill the Chai \u2014 community break",                                       brk:true },
+    { time:"15:20 \u2013 16:50", label:t.id==="colleena"?"Your workshop: Abhinaya: Training Expression for Dance"    :"Abhinaya: Training Expression for Dance",      mine:t.id==="colleena", otherT:t.id!=="colleena", teacher:"colleena" },
+    { time:"16:00",              label:"Tech crew setup begins (crew only)" },
+    { time:t.slot,               label:`Your stage rehearsal \u2014 Act ${t.act}`,                                    mine:true },
+    { time:"20:00",              label:"Doors open \u2014 audience entry" },
+    { time:"20:15",              label:"All performers at stations" },
+    { time:"20:30",              label:"\u25b6 GIDF 2026 Gala Showcase BEGINS",                                       show:true },
+    { time:"~21:30",             label:"Show ends",                                                                    brk:true },
+  ];
+
+  const rowHtml = r => {
+    const cls = r.show ? 'show' : r.mine ? 'mine' : r.brk ? 'brk' : r.otherT ? 'other-t' : '';
+    const chip = r.teacher ? `<span class="t-chip">${TNAMES[r.teacher]||r.teacher}</span>` : '';
+    return `<div class="sched-row ${cls}"><div class="sched-time">${r.time||''}</div><div class="sched-body"><div class="sched-title">${r.label}${chip}</div></div></div>`;
+  };
+
   const cards = `<div class="hero-grid">
     <div class="hero-card hc-orange"><div class="hc-lbl">Your Act</div><div class="hc-val">${t.act}</div><div class="hc-sub">of 18 acts total</div></div>
     <div class="hero-card hc-green"><div class="hc-lbl">Tech Rehearsal</div><div class="hc-val">${t.slot}</div><div class="hc-sub">10 min on stage</div></div>
     <div class="hero-card"><div class="hc-lbl">Gala Showcase</div><div class="hc-val">20:30</div><div class="hc-sub">Doors open 20:00</div></div>
     <div class="hero-card"><div class="hc-lbl">Changing Room</div><div class="hc-val">15:00</div><div class="hc-sub">Studio Ananta \u00b7 Ground Floor</div></div>
   </div>`;
-  const sched = rows.map(r => {
-    const cls = r.show ? 'show' : r.mine ? 'mine' : r.brk ? 'brk' : '';
-    return `<div class="sched-row ${cls}"><div class="sched-time">${r.time}</div><div class="sched-body"><div class="sched-title">${r.label}</div></div></div>`;
-  }).join('');
-  return `<div class="sec-title">${t.name} \u2014 Saturday 2 May 2026</div>
-<div class="sec-sub">Your personal day schedule \u00b7 Orange rows are your sessions</div>
+
+  return `<div class="sec-title">${t.name} \u2014 GIDF 2026</div>
+<div class="sec-sub">Your personal schedule \u00b7 Orange = your sessions \u00b7 Green = other teachers</div>
 ${cards}
+<div class="day-label">Friday 1 May 2026</div>
+${friRows.map(rowHtml).join('')}
 <div class="day-label">Saturday 2 May 2026</div>
-${sched}`;
+${satRows.map(rowHtml).join('')}`;
 }
 
 function renderShowOrder(t) {
