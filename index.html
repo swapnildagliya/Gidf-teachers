@@ -75,14 +75,13 @@ tbody tr:last-child td{border-bottom:none}
 .check-item{display:flex;gap:10px;padding:9px 14px;background:#fff;border:1px solid #E5DDD3;border-radius:8px;margin-bottom:6px;font-size:13px;color:#1C1108;align-items:flex-start}
 .check-box{width:16px;height:16px;border:2px solid #D5CCC2;border-radius:3px;flex-shrink:0;margin-top:1px}
 /* maps */
-.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:12px}
+.venue-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px}
 .map-card{background:#fff;border:1px solid #E5DDD3;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.map-card img{width:100%;height:auto;display:block}
-.map-card-wide{background:#fff;border:1px solid #E5DDD3;border-radius:10px;overflow:hidden;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.map-card-wide img{max-width:360px;width:100%;display:block;margin:0 auto}
-.map-info{padding:14px}
-.map-title{font-size:13px;font-weight:700;color:#1C1108;margin-bottom:4px}
-.map-desc{font-size:12px;color:#6B5840;line-height:1.5}
+.map-card img{width:100%;height:220px;object-fit:contain;object-position:center;display:block;background:#f9f6f2;border-bottom:1px solid #E5DDD3}
+.map-info{padding:12px 14px}
+.map-title{font-size:12px;font-weight:700;color:#1C1108;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.map-desc{font-size:12px;color:#6B5840;line-height:1.6}
+@media(max-width:600px){.venue-cards{grid-template-columns:1fr}}
 /* alert */
 .alert{padding:13px 16px;border-radius:8px;margin-bottom:18px;font-size:13px;line-height:1.6}
 .alert-orange{background:#FEF6EF;outline:2px solid #B5421A;border-radius:8px;color:#7A3010}
@@ -216,24 +215,24 @@ const TEACHERS = [
 ];
 
 const SHOW = [
-  { num:1,  performer:"Bollywood Batch 2",         song:"Morya Re",                       type:"student" },
+  { num:1,  performer:"Bollywood Batch 2",         song:"Morya Re", dur:"2:00",                       type:"student" },
   { num:2,  performer:"Opening Party Performer 1", song:"TBD",                            type:"op" },
-  { num:3,  performer:"Desihop",                   song:"TBD",                            type:"teacher", id:"desihop" },
-  { num:4,  performer:"Bollyfolk \u2014 Ghoomar",  song:"Jalalo Bilalo / Savariya Parnaye",type:"student" },
-  { num:5,  performer:"Manasi",                    song:"Giddha",                         type:"teacher", id:"manasi" },
-  { num:6,  performer:"Bollyfolk \u2014 Tippani",  song:"O Re Kanchi",                    type:"student" },
+  { num:3,  performer:"Desihop",                   song:"Chikkama-Vengayo, Foxn, Paal Dabba, Think Indie", style:"Afro · kuthu · hip hop fusion", fmt:"Duet", dur:"1:32", type:"teacher", id:"desihop" },
+  { num:4,  performer:"Bollyfolk \u2014 Ghoomar",  song:"Jalalo Bilalo / Savariya Parnaye", dur:"5:32",type:"student" },
+  { num:5,  performer:"Manasi",                    style:"TBD",          fmt:"TBD",   song:"Giddha",                         type:"teacher", id:"manasi" },
+  { num:6,  performer:"Bollyfolk \u2014 Tippani",  song:"O Re Kanchi", dur:"2:58",                    type:"student" },
   { num:7,  performer:"Opening Party Performer 2", song:"TBD",                            type:"op" },
-  { num:8,  performer:"ABC \u2014 Choli Ke Peeche",song:"Choli Ke Peeche Kya Hai",        type:"student" },
-  { num:9,  performer:"Bhangra",                   song:"Insane Bhangra Mashup / Tere Long Da", type:"student" },
+  { num:8,  performer:"ABC \u2014 Choli Ke Peeche",song:"Choli Ke Peeche Kya Hai", dur:"2:06",        type:"student" },
+  { num:9,  performer:"Bhangra",                   song:"Insane Bhangra Mashup / Tere Long Da", dur:"5:34", type:"student" },
   { num:10, performer:"Opening Party Performer 3", song:"TBD",                            type:"op" },
-  { num:11, performer:"Shampa",                    song:"TBD",                            type:"teacher", id:"shampa" },
-  { num:12, performer:"Semi-Classical",            song:"Toda & Kavitt / Saiyaara Reprise",type:"student" },
-  { num:13, performer:"Vaishali",                  song:"TBD",                            type:"teacher", id:"vaishali" },
-  { num:14, performer:"ABC \u2014 Ghar More Pardesiya", song:"Ghar More Pardesiya",       type:"student" },
-  { num:15, performer:"Colleena",                  song:"TBD (Rajasthani Folk)",          type:"teacher", id:"colleena" },
+  { num:11, performer:"Shampa",                    style:"Garba",    fmt:"Solo",  song:"TBD",                            type:"teacher", id:"shampa" },
+  { num:12, performer:"Semi-Classical",            song:"Toda & Kavitt / Saiyaara Reprise", dur:"9:00",type:"student" },
+  { num:13, performer:"Vaishali",                  style:"TBD",          fmt:"Solo",  song:"TBD",                            type:"teacher", id:"vaishali" },
+  { num:14, performer:"ABC \u2014 Ghar More Pardesiya", song:"Ghar More Pardesiya", dur:"2:21",       type:"student" },
+  { num:15, performer:"Colleena",                  style:"TBD",          fmt:"Solo",  song:"TBD",          type:"teacher", id:"colleena" },
   { num:16, performer:"Swapnil \u2014 Kalbeliya",  song:"TBD",                            type:"student" },
-  { num:17, performer:"Madhuri Dixit Medley",      song:"Madhuri Dixit Medley",           type:"student", duration:"7:38" },
-  { num:18, performer:"Grand Finale",              song:"TBD \u2014 see Swapnil",         type:"student" },
+  { num:17, performer:"Madhuri Dixit Medley",      song:"Madhuri Dixit Medley", dur:"7:38",           type:"student" },
+  { num:18, performer:"Grand Finale",              song:"TBD",         type:"student" },
 ];
 
 const TECH = [
@@ -478,35 +477,35 @@ function renderVenue() {
     <img src="maps/ground-floor.png" alt="Ground Floor">
     <div class="map-info">
       <div class="map-title">Ground Floor</div>
-      <div class="map-desc">Entry, Bar, Studio Ananta (your changing room), and stairs leading up to Studio Art Deco and Studio Aakash. Toilets are in the basement.</div>
+      <div class="map-desc">Enter from the front door. Studio Ananta is on your right — this is your dressing room. The seating area and stairs are to the left; take the stairs up to Studio Art Deco, the changing rooms, and Studio Aakash. Bar is near the entrance. Toilets are in the basement.</div>
     </div>
   </div>
   <div class="map-card">
     <img src="maps/art-deco.png" alt="Studio Art Deco — Theatre Setting">
     <div class="map-info">
-      <div class="map-title">Studio Art Deco &nbsp;·&nbsp; First Floor</div>
-      <div class="map-desc">The Gala Showcase stage. Entry from Stage Right or Stage Left as confirmed with Swapnil. Stairs down to your changing room (Studio Ananta) are backstage.</div>
+      <div class="map-title">Studio Art Deco &nbsp;·&nbsp; First Floor &nbsp;·&nbsp; The Stage</div>
+      <div class="map-desc">Stage area is 10m × 8m with a backstage area above. Enter from Stage Right or Stage Left — as confirmed with Swapnil. Stairs backstage lead down to Studio Ananta (your dressing room). A dedicated zone for artists and students to watch is marked stage left.</div>
     </div>
   </div>
   <div class="map-card">
     <img src="maps/ananta-teachers.png" alt="Studio Ananta — Changing Room for Teachers">
     <div class="map-info">
-      <div class="map-title">Studio Ananta &nbsp;·&nbsp; Ground Floor &nbsp;·&nbsp; Your Changing Room</div>
-      <div class="map-desc">Dressing room for all teachers. Stairs from here go directly up to the backstage area of Studio Art Deco.</div>
+      <div class="map-title">Studio Ananta &nbsp;·&nbsp; Ground Floor &nbsp;·&nbsp; Your Dressing Room</div>
+      <div class="map-desc">Your dressing room for the Gala Showcase (all teachers share this space). Stairs from Studio Ananta go directly up to the backstage area of Studio Art Deco. After your performance, come back down and use the seating area to watch the rest of the show.</div>
     </div>
   </div>
   <div class="map-card">
     <img src="maps/ananta-opening-party.png" alt="Studio Ananta — Opening Party">
     <div class="map-info">
-      <div class="map-title">Studio Ananta &nbsp;·&nbsp; Opening Party</div>
-      <div class="map-desc">Used as changing room for Opening Party performers. Stage area is 8m \u00d7 22m. Stairs lead up to Studio Art Deco, Studio Aakash and changing rooms.</div>
+      <div class="map-title">Studio Ananta &nbsp;·&nbsp; Opening Party Night</div>
+      <div class="map-desc">On Opening Party night, Studio Ananta doubles as the performance space (8m × 22m, with mirrors along one wall) and the changing room for Opening Party performers. Stairs lead up to Studio Art Deco, Studio Aakash, and the changing rooms between floors.</div>
     </div>
   </div>
   <div class="map-card">
     <img src="maps/second-floor.png" alt="Second Floor — Studio Aakash">
     <div class="map-info">
       <div class="map-title">Second Floor &nbsp;·&nbsp; Studio Aakash &amp; Changing Rooms</div>
-      <div class="map-desc">Studio Aakash hosts some workshops. On show day this floor houses student changing rooms (Changing Room 1 &amp; 2).</div>
+      <div class="map-desc">Studio Aakash is used for some workshops during the festival. On Gala Showcase day, this floor houses the student changing rooms (Changing Room 1 and Changing Room 2). There is a toilet on this floor. Access via stairs from the ground floor.</div>
     </div>
   </div>
 </div>`;
@@ -624,10 +623,6 @@ function renderInfo(t) {
     + mkRadio('entry', 'right',  'Stage Right (left wing as you face the audience)',  'entrySide', false)
     + mkRadio('entry', 'left',   'Stage Left (right wing as you face the audience)',  'entrySide', false)
     + mkRadio('entry', 'centre', 'Centre \u2014 from the curtain',                    'entrySide', false)
-    + '</div></div>'
-    + '<div class="form-field"><label class="form-label">Bow at the end</label><div class="radio-group">'
-    + mkRadio('bow', 'yes', 'Yes \u2014 I will take a bow',   'bow', true)
-    + mkRadio('bow', 'no',  'No \u2014 I will exit directly', 'bow', true)
     + '</div></div>'
     + '<div class="form-field"><label class="form-label">Exit cue \u2014 how should the lights signal your act is over?</label>'
     + '<div style="font-size:12px;color:#999;margin-bottom:10px">Think about this in advance \u2014 it helps the light tech know exactly when to move on</div>'
