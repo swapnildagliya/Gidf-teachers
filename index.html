@@ -280,7 +280,7 @@ TEACHERS.forEach(function(t) {
     backLEDs:'Warm amber',
     sideLight:'Soft warm',
     smoke:false, blackout:false,
-    cue:'onstage', entrySide:'right', bow:true,
+    cue:'onstage', entrySide:'right',
     lightCues:'', special:''
   };
 });
@@ -314,7 +314,7 @@ function generateCode(tid) {
     song: s.song, style: s.style, duration: s.duration, costumeColor: s.costumeColor,
     lights: lights.join('\n'), lightCues: s.lightCues,
     smoke: s.smoke, blackout: s.blackout,
-    cue: s.cue, entrySide: s.entrySide, bow: s.bow, special: s.special
+    cue: s.cue, entrySide: s.entrySide, special: s.special
   };
   var json = JSON.stringify(data);
   var code;
